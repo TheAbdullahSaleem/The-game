@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://3v4geq2t6nj3"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nl1qf"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_y1q5r"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_l3ax4"]
+
+[node name="Player" type="CharacterBody3D" unique_id=899053884]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1784073349]
+shape = SubResource("CapsuleShape3D_nl1qf")
+
+[node name="Visuals" type="Node3D" parent="." unique_id=825961170]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Visuals" unique_id=1152833352]
+mesh = SubResource("CapsuleMesh_y1q5r")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1743050765]
+libraries/Walking = SubResource("AnimationLibrary_l3ax4")
