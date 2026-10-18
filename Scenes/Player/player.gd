@@ -17,11 +17,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	var horizontal_velocity = Vector2(velocity.x, velocity.z)
-	if horizontal_velocity.length() > 0.1:
-		anim_player.play("Global/walking",-1,10.0)
-	else:
-		anim_player.play("Global/idle")
+		
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
@@ -40,6 +36,23 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
+	
+	# 1. Check if the player is actually moving horizontally
+	var horizontal_velocity = Vector2(velocity.x, velocity.z)
+	var is_moving: bool = horizontal_velocity.length() > 0.1
+
+	# 2. Let GDScript dictate exactly what happens based on current playback
+	if anim_player:
+		if is_moving:
+			# If we are standing still or coming out of a stop, start walking
+			if anim_player.current_animation == "Global/walking_to_idle" or anim_player.current_animation == "" or anim_player.current_animation == "Global/idle" :
+				anim_player.play("Global/idle_to_waliking")
+				anim_player.queue("Global/walking") # Queues the infinite walk loop
+		else:
+			# If we are walking or coming out of a start, start stopping
+			if anim_player.current_animation == "Global/idle_to_waliking" or anim_player.current_animation == "Global/walking":
+				anim_player.play("Global/walking_to_idle")
+				anim_player.queue("Global/idle") # Queues the infinite idle loop
 
 	move_and_slide()
 func _unhandled_input(event: InputEvent) -> void:
